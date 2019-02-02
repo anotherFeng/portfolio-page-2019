@@ -1,6 +1,11 @@
+import Header from '../shared/Header';
+
 const BaseLayout = (props) => {
   return (
-    {props.children}
+    <div>
+      <Header/>
+      {props.children}
+    </div>
   )
 }
 

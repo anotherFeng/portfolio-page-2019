@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 
+import '../../styles/main.scss';
+
 class Header extends React.Component {
   render() {
     const title = this.props.title;
@@ -9,6 +11,9 @@ class Header extends React.Component {
       <React.Fragment>
         <p>{title}</p>
         <p>{this.props.children}</p>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
         <Link href="/about">
           <a>About</a>
         </Link>
