@@ -9,22 +9,20 @@ class Header extends React.Component {
 
     return (
       <React.Fragment>
-        <p>{title}</p>
-        <p>{this.props.children}</p>
         <Link href="/">
-          <a>Home</a>
+          <a> Home</a>
         </Link>
         <Link href="/about">
-          <a>About</a>
+          <a> About</a>
         </Link>
         <Link href="/portfolios">
-          <a>Portfolios</a>
+          <a> Portfolios</a>
         </Link>
         <Link href="/blogs">
-          <a>Blogs</a>
+          <a> Blogs</a>
         </Link>
         <Link href="/resume">
-          <a>Resume</a>
+          <a> Resume</a>
         </Link>
       </React.Fragment>
     )
