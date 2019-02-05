@@ -1,10 +1,12 @@
 import Header from '../shared/Header';
 
-const BaseLayout = (props) => {
+const BaseLayout = ({children, className}) => {
   return (
-    <div>
+    <div className="layout-container">
       <Header/>
-      {props.children}
+      <main className={`cover ${className}`}>
+        {children}
+      </main>
     </div>
   )
 }
