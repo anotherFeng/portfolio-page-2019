@@ -13,9 +13,9 @@ import {
 
 const CustomNavLink = ({ route, title }) => {
   return (
-    <NavItem>
+    <NavItem className="port-navbar-item">
       <Link href={route}>
-        <a className="nav-link">
+        <a className="port-navbar-link nav-link">
           {title}
         </a>
       </Link>
@@ -40,8 +40,8 @@ class Header extends React.Component {
   render() {
     return (
       <div>
-        <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">FENG CHEN</NavbarBrand>
+        <Navbar className="absolute port-navbar port-default" color="transparent" dark expand="md">
+          <NavbarBrand className="port-navbar-brand" href="/">FENG CHEN</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
@@ -50,8 +50,8 @@ class Header extends React.Component {
               <CustomNavLink route="/portfolios" title="Portfolios"/>
               <CustomNavLink route="/blogs" title="Blogs"/>
               <CustomNavLink route="/resume" title="Resume"/>
-              <NavItem>
-                <NavLink href="https://github.com/anotherFeng/portfolio-page-2019">GitHub</NavLink>
+              <NavItem className="port-navbar-item">
+                <NavLink className="port-navbar-link" href="https://github.com/anotherFeng/portfolio-page-2019">GitHub</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
