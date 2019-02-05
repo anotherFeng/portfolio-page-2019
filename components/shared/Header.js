@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-
 import {
   Collapse,
   Navbar,
@@ -11,6 +10,8 @@ import {
   NavLink
 } from 'reactstrap';
 
+import auth0 from '../../services/auth0';
+
 const CustomNavLink = ({ route, title }) => {
   return (
     <NavItem className="port-navbar-item">
@@ -19,6 +20,22 @@ const CustomNavLink = ({ route, title }) => {
           {title}
         </a>
       </Link>
+    </NavItem>
+  )
+}
+
+const Login = () => {
+  return (
+    <NavItem className="port-navbar-item">
+      <span onClick={auth0.login} className="nav-link port-navbar-link clickable"> Login </span>
+    </NavItem>
+  )
+}
+
+const Logout = () => {
+  return (
+    <NavItem className="port-navbar-item">
+      <span className="nav-link port-navbar-link clickable"> Logout </span>
     </NavItem>
   )
 }
@@ -53,6 +70,8 @@ class Header extends React.Component {
               <NavItem className="port-navbar-item">
                 <NavLink className="port-navbar-link" href="https://github.com/anotherFeng/portfolio-page-2019">GitHub</NavLink>
               </NavItem>
+              <Login/>
+              <Logout/>
             </Nav>
           </Collapse>
         </Navbar>
