@@ -35,7 +35,7 @@ const Login = () => {
 const Logout = () => {
   return (
     <NavItem className="port-navbar-item">
-      <span className="nav-link port-navbar-link clickable"> Logout </span>
+      <span onClick={auth0.logout} className="nav-link port-navbar-link clickable"> Logout </span>
     </NavItem>
   )
 }
