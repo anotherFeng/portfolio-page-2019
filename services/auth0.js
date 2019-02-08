@@ -29,7 +29,6 @@ class Auth0{
   setSession = (authResult) => {
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
 
-    debugger;
     Cookies.set('user', authResult.idTokenPayload);
     Cookies.set('jwt', authResult.idToken);
     Cookies.set('expiresAt', expiresAt);

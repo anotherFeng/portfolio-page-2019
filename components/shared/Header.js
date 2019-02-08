@@ -70,8 +70,9 @@ class Header extends React.Component {
               <NavItem className="port-navbar-item">
                 <NavLink className="port-navbar-link" href="https://github.com/anotherFeng/portfolio-page-2019">GitHub</NavLink>
               </NavItem>
-              <Login/>
-              <Logout/>
+              {
+                auth0.isAuthenticated() ? <Logout/> : <Login/>
+              }
             </Nav>
           </Collapse>
         </Navbar>
