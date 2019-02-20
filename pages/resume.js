@@ -7,7 +7,7 @@ class Resume extends React.Component {
   render() {
     return (
       <BaseLayout>
-        <BasePage>
+        <BasePage {...this.props.auth}>
           <h1>Resume Page</h1>
         </BasePage>
       </BaseLayout>

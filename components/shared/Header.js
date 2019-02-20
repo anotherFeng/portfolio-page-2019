@@ -55,6 +55,9 @@ class Header extends React.Component {
     });
   }
   render() {
+
+    const { isAuthenticated } = this.props;
+
     return (
       <div>
         <Navbar className="absolute port-navbar port-default" color="transparent" dark expand="md">
@@ -70,7 +73,7 @@ class Header extends React.Component {
               <NavItem className="port-navbar-item">
                 <NavLink className="port-navbar-link" href="https://github.com/anotherFeng/portfolio-page-2019">GitHub</NavLink>
               </NavItem>
-              { auth0.isAuthenticated() ? <Logout/> : <Login/> }
+              { isAuthenticated ? <Logout/> : <Login/> }
             </Nav>
           </Collapse>
         </Navbar>

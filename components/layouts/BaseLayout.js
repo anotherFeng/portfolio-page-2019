@@ -1,9 +1,9 @@
 import Header from '../shared/Header';
 
-const BaseLayout = ({children, className = ''}) => {
+const BaseLayout = ({children, className = '', isAuthenticated}) => {
   return (
     <React.Fragment>
-      <Header/>
+      <Header isAuthenticated={isAuthenticated}/>
       <main className={`cover ${className}`}>
         {children}
       </main>

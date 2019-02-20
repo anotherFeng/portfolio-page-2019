@@ -133,6 +133,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -172,8 +174,11 @@ function (_App) {
     value: function render() {
       var _this$props = this.props,
           Component = _this$props.Component,
-          pageProps = _this$props.pageProps;
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(next_app__WEBPACK_IMPORTED_MODULE_2__["Container"], null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Component, pageProps));
+          pageProps = _this$props.pageProps,
+          auth = _this$props.auth;
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(next_app__WEBPACK_IMPORTED_MODULE_2__["Container"], null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Component, _extends({}, pageProps, {
+        auth: auth
+      })));
     }
   }], [{
     key: "getInitialProps",
@@ -181,33 +186,38 @@ function (_App) {
       var _getInitialProps = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-        var Component, ctx, pageProps, isAuthenticated;
+        var Component, router, ctx, pageProps, user, auth;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                Component = _ref.Component, ctx = _ref.ctx;
+                Component = _ref.Component, router = _ref.router, ctx = _ref.ctx;
                 pageProps = {};
-                isAuthenticated =  false ? undefined : _services_auth0__WEBPACK_IMPORTED_MODULE_3__["default"].serverAuth(ctx.req);
-                console.log(isAuthenticated);
+                user =  false ? undefined : _services_auth0__WEBPACK_IMPORTED_MODULE_3__["default"].serverAuth(ctx.req);
 
                 if (!Component.getInitialProps) {
-                  _context.next = 8;
+                  _context.next = 7;
                   break;
                 }
 
-                _context.next = 7;
+                _context.next = 6;
                 return Component.getInitialProps(ctx);
 
-              case 7:
+              case 6:
                 pageProps = _context.sent;
 
-              case 8:
+              case 7:
+                console.log(user);
+                auth = {
+                  user: user,
+                  isAuthenticated: !!user
+                };
                 return _context.abrupt("return", {
-                  pageProps: pageProps
+                  pageProps: pageProps,
+                  auth: auth
                 });
 
-              case 9:
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -243,91 +253,117 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var auth0_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(auth0_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-cookie */ "js-cookie");
 /* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var jsonwebtoken__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jsonwebtoken */ "jsonwebtoken");
+/* harmony import */ var jsonwebtoken__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jsonwebtoken__WEBPACK_IMPORTED_MODULE_2__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
-var Auth0 = function Auth0() {
-  var _this = this;
 
-  _classCallCheck(this, Auth0);
+var Auth0 =
+/*#__PURE__*/
+function () {
+  function Auth0() {
+    var _this = this;
 
-  _defineProperty(this, "handleAuthentication", function () {
-    return new Promise(function (resolve, reject) {
-      _this.auth0.parseHash(function (err, authResult) {
-        if (authResult && authResult.accessToken && authResult.idToken) {
-          _this.setSession(authResult);
+    _classCallCheck(this, Auth0);
 
-          resolve();
-        } else if (err) {
-          reject(err);
-        }
+    _defineProperty(this, "handleAuthentication", function () {
+      return new Promise(function (resolve, reject) {
+        _this.auth0.parseHash(function (err, authResult) {
+          if (authResult && authResult.accessToken && authResult.idToken) {
+            _this.setSession(authResult);
+
+            resolve();
+          } else if (err) {
+            reject(err);
+          }
+        });
       });
     });
-  });
 
-  _defineProperty(this, "setSession", function (authResult) {
-    var expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
-    js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.set('user', authResult.idTokenPayload);
-    js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.set('jwt', authResult.idToken);
-    js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.set('expiresAt', expiresAt);
-  });
-
-  _defineProperty(this, "logout", function () {
-    js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('user');
-    js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('jwt');
-    js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('expiresAt');
-
-    _this.auth0.logout({
-      returnTo: '',
-      clientID: '9jHeVWFcQNgrsgw21WZUvYcWlZkwxJoC'
+    _defineProperty(this, "setSession", function (authResult) {
+      var expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
+      js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.set('user', authResult.idTokenPayload);
+      js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.set('jwt', authResult.idToken);
+      js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.set('expiresAt', expiresAt);
     });
-  });
 
-  _defineProperty(this, "login", function () {
-    _this.auth0.authorize();
-  });
+    _defineProperty(this, "logout", function () {
+      js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('user');
+      js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('jwt');
+      js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('expiresAt');
 
-  _defineProperty(this, "isAuthenticated", function () {
-    // Check whether the current time is past the
-    // access token's expiry time
-    var expiresAt = js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.getJSON('expiresAt');
-    return new Date().getTime() < expiresAt;
-  });
-
-  _defineProperty(this, "clientAuth", function () {
-    return _this.isAuthenticated();
-  });
-
-  _defineProperty(this, "serverAuth", function (req) {
-    if (req.headers.cookie) {
-      // const expiresAtCookie = req.headers.cookie.split(';').find( c => c.trim().startsWith('expiresAt='));
-      var cookies = req.headers.cookie;
-      var splittedCookies = cookies.split(';');
-      var expiresAtCookie = splittedCookies.find(function (c) {
-        return c.trim().startsWith('expiresAt=');
+      _this.auth0.logout({
+        returnTo: '',
+        clientID: '9jHeVWFcQNgrsgw21WZUvYcWlZkwxJoC'
       });
+    });
 
-      if (expiresAtCookie) {
-        return undefined;
+    _defineProperty(this, "login", function () {
+      _this.auth0.authorize();
+    });
+
+    _defineProperty(this, "verifyToken", function (token) {
+      if (token) {
+        var decodedToken = jsonwebtoken__WEBPACK_IMPORTED_MODULE_2___default.a.decode(token);
+        var expiresAt = decodedToken.exp = 1000;
+        return decodedToken && new Date().getTime() < expiresAt ? decodedToken : undefined;
       }
 
-      var expiresAt = expiresAtCookie.split('=')[1];
-      return new Date().getTime() < expiresAt;
-    }
-  });
+      return undefined;
+    });
 
-  this.auth0 = new auth0_js__WEBPACK_IMPORTED_MODULE_0___default.a.WebAuth({
-    domain: 'anotherfeng.auth0.com',
-    clientID: '9jHeVWFcQNgrsgw21WZUvYcWlZkwxJoC',
-    redirectUri: 'http://localhost:3000/callback',
-    responseType: 'token id_token',
-    scope: 'openid'
-  });
-};
+    this.auth0 = new auth0_js__WEBPACK_IMPORTED_MODULE_0___default.a.WebAuth({
+      domain: 'anotherfeng.auth0.com',
+      clientID: '9jHeVWFcQNgrsgw21WZUvYcWlZkwxJoC',
+      redirectUri: 'http://localhost:3000/callback',
+      responseType: 'token id_token',
+      scope: 'openid'
+    });
+  }
+
+  _createClass(Auth0, [{
+    key: "clientAuth",
+    value: function clientAuth() {
+      var token = js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.getJSON('jwt');
+      var verifiedToken = this.verifyToken(token);
+      return verifiedToken;
+    }
+  }, {
+    key: "serverAuth",
+    value: function serverAuth(req) {
+      if (req.headers.cookie) {
+        var jwtCookies = req.headers.cookie;
+        console.log(jwtCookies); // 'this returns the token string as above'
+
+        var splittedCookies = jwtCookies.split(';');
+        var expiresAtCookie = splittedCookies.find(function (c) {
+          return c.trim().startsWith('jwt=');
+        });
+
+        if (expiresAtCookie) {
+          return undefined;
+        }
+
+        console.log('token info ----->', expiresAtCookie); // undefined
+
+        var token = expiresAtCookie.split('=')[1];
+        var verifiedToken = this.verifyToken(token);
+        return verifiedToken;
+      }
+    }
+  }]);
+
+  return Auth0;
+}();
 
 var auth0Client = new Auth0();
 /* harmony default export */ __webpack_exports__["default"] = (auth0Client);
@@ -387,6 +423,17 @@ module.exports = require("auth0-js");
 /***/ (function(module, exports) {
 
 module.exports = require("js-cookie");
+
+/***/ }),
+
+/***/ "jsonwebtoken":
+/*!*******************************!*\
+  !*** external "jsonwebtoken" ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("jsonwebtoken");
 
 /***/ }),
 
